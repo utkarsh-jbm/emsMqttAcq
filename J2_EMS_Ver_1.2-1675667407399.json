@@ -1,0 +1,3848 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_INFLUXDB2",
+      "label": "InfluxDB2",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.2.4"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "state-timeline",
+      "name": "State timeline",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "${DS_INFLUXDB2}"
+        },
+        "enable": false,
+        "iconColor": "red",
+        "name": "New annotation",
+        "target": {
+          "fromAnnotations": true,
+          "name": "New annotation",
+          "query": "",
+          "queryType": "tags",
+          "tagsColumn": "",
+          "textColumn": "",
+          "timeEndColumn": "",
+          "titleColumn": ""
+        }
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 2,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"onMeters\" or r[\"_field\"] == \"OffMeters\")\n\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-blues"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalStrokeCounter N8_HPS_1_300T_1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 4,
+        "y": 0
+      },
+      "id": 33,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 25,
+          "valueSize": 40
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Comp_EM_Tag6\" or r[\"_field\"] == \"EM_Admin_Office\" or r[\"_field\"] == \"EM_Atlas_200\" or r[\"_field\"] == \"EM_CMM\" or r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\" or r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\" or r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\" or r[\"_field\"] == \"EM_Elgi6\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\" or r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_Hitachi_600T\" or r[\"_field\"] == \"EM_HMT_400T\" or r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\" or r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\" or r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\" or r[\"_field\"] == \"EM_Nut_Weld1\" or r[\"_field\"] == \"EM_Roll_Foaming\" or r[\"_field\"] == \"EM_Rovetta\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone15\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone16\" or r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\" or r[\"_field\"] == \"EM_Tag10\" or r[\"_field\"] == \"EM_Tag11\" or r[\"_field\"] == \"EM_Tag12\" or r[\"_field\"] == \"EM_Tag13\" or r[\"_field\"] == \"EM_Tag14\" or r[\"_field\"] == \"EM_Tag15\" or r[\"_field\"] == \"EM_Tag16\" or r[\"_field\"] == \"EM_Tag17\" or r[\"_field\"] == \"EM_Tag18\" or r[\"_field\"] == \"EM_Tag19\" or r[\"_field\"] == \"EM_Tag20\" or r[\"_field\"] == \"EM_Tag7\" or r[\"_field\"] == \"EM_Tag8\" or r[\"_field\"] == \"EM_Tag9\" or r[\"_field\"] == \"EM_Tool_Room\" or r[\"_field\"] == \"Fagor_EM_Tag4\" or r[\"_field\"] == \"Fagor_EM_Tag5\" or r[\"_field\"] == \"KOM_EM_Tag1\" or r[\"_field\"] == \"KOM_EM_Tag2\" or r[\"_field\"] == \"KOM_EM_Tag3\")\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Till date Consumption",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalStrokeCounter N8_HPS_1_300T_1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 0
+      },
+      "id": 45,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 25,
+          "valueSize": 40
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Comp_EM_Tag6\" or r[\"_field\"] == \"EM_Admin_Office\" or r[\"_field\"] == \"EM_Atlas_200\" or r[\"_field\"] == \"EM_CMM\" or r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\" or r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\" or r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\" or r[\"_field\"] == \"EM_Elgi6\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\" or r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_Hitachi_600T\" or r[\"_field\"] == \"EM_HMT_400T\" or r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\" or r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\" or r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\" or r[\"_field\"] == \"EM_Nut_Weld1\" or r[\"_field\"] == \"EM_Roll_Foaming\" or r[\"_field\"] == \"EM_Rovetta\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone15\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone16\" or r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\" or r[\"_field\"] == \"EM_Tag10\" or r[\"_field\"] == \"EM_Tag11\" or r[\"_field\"] == \"EM_Tag12\" or r[\"_field\"] == \"EM_Tag13\" or r[\"_field\"] == \"EM_Tag14\" or r[\"_field\"] == \"EM_Tag15\" or r[\"_field\"] == \"EM_Tag16\" or r[\"_field\"] == \"EM_Tag17\" or r[\"_field\"] == \"EM_Tag18\" or r[\"_field\"] == \"EM_Tag19\" or r[\"_field\"] == \"EM_Tag20\" or r[\"_field\"] == \"EM_Tag7\" or r[\"_field\"] == \"EM_Tag8\" or r[\"_field\"] == \"EM_Tag9\" or r[\"_field\"] == \"EM_Tool_Room\" or r[\"_field\"] == \"Fagor_EM_Tag4\" or r[\"_field\"] == \"Fagor_EM_Tag5\" or r[\"_field\"] == \"KOM_EM_Tag1\" or r[\"_field\"] == \"KOM_EM_Tag2\" or r[\"_field\"] == \"KOM_EM_Tag3\")\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalStrokeCounter N8_HPS_1_300T_1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 0
+      },
+      "id": 48,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Comp_EM_Tag6\" or r[\"_field\"] == \"EM_Admin_Office\" or r[\"_field\"] == \"EM_Atlas_200\" or r[\"_field\"] == \"EM_CMM\" or r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\" or r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\" or r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\" or r[\"_field\"] == \"EM_Elgi6\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\" or r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_Hitachi_600T\" or r[\"_field\"] == \"EM_HMT_400T\" or r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\" or r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\" or r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\" or r[\"_field\"] == \"EM_Nut_Weld1\" or r[\"_field\"] == \"EM_Roll_Foaming\" or r[\"_field\"] == \"EM_Rovetta\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone15\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone16\" or r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\" or r[\"_field\"] == \"EM_Tag10\" or r[\"_field\"] == \"EM_Tag11\" or r[\"_field\"] == \"EM_Tag12\" or r[\"_field\"] == \"EM_Tag13\" or r[\"_field\"] == \"EM_Tag14\" or r[\"_field\"] == \"EM_Tag15\" or r[\"_field\"] == \"EM_Tag16\" or r[\"_field\"] == \"EM_Tag17\" or r[\"_field\"] == \"EM_Tag18\" or r[\"_field\"] == \"EM_Tag19\" or r[\"_field\"] == \"EM_Tag20\" or r[\"_field\"] == \"EM_Tag7\" or r[\"_field\"] == \"EM_Tag8\" or r[\"_field\"] == \"EM_Tag9\" or r[\"_field\"] == \"EM_Tool_Room\" or r[\"_field\"] == \"Fagor_EM_Tag4\" or r[\"_field\"] == \"Fagor_EM_Tag5\" or r[\"_field\"] == \"KOM_EM_Tag1\" or r[\"_field\"] == \"KOM_EM_Tag2\" or r[\"_field\"] == \"KOM_EM_Tag3\")\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "1Unit = 1KWH",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlYlRd"
+          },
+          "mappings": [],
+          "noValue": "Error!",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalStrokeCounter N8_HPS_1_300T_1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 0
+      },
+      "id": 46,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Comp_EM_Tag6\" or r[\"_field\"] == \"EM_Admin_Office\" or r[\"_field\"] == \"EM_Atlas_200\" or r[\"_field\"] == \"EM_CMM\" or r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\" or r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\" or r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\" or r[\"_field\"] == \"EM_Elgi6\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\" or r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_Hitachi_600T\" or r[\"_field\"] == \"EM_HMT_400T\" or r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\" or r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\" or r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\" or r[\"_field\"] == \"EM_Nut_Weld1\" or r[\"_field\"] == \"EM_Roll_Foaming\" or r[\"_field\"] == \"EM_Rovetta\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone15\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone16\" or r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\" or r[\"_field\"] == \"EM_Tag10\" or r[\"_field\"] == \"EM_Tag11\" or r[\"_field\"] == \"EM_Tag12\" or r[\"_field\"] == \"EM_Tag13\" or r[\"_field\"] == \"EM_Tag14\" or r[\"_field\"] == \"EM_Tag15\" or r[\"_field\"] == \"EM_Tag16\" or r[\"_field\"] == \"EM_Tag17\" or r[\"_field\"] == \"EM_Tag18\" or r[\"_field\"] == \"EM_Tag19\" or r[\"_field\"] == \"EM_Tag20\" or r[\"_field\"] == \"EM_Tag7\" or r[\"_field\"] == \"EM_Tag8\" or r[\"_field\"] == \"EM_Tag9\" or r[\"_field\"] == \"EM_Tool_Room\" or r[\"_field\"] == \"Fagor_EM_Tag4\" or r[\"_field\"] == \"Fagor_EM_Tag5\" or r[\"_field\"] == \"KOM_EM_Tag1\" or r[\"_field\"] == \"KOM_EM_Tag2\" or r[\"_field\"] == \"KOM_EM_Tag3\")\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit Cost = Rs7.0",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.0071"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalStrokeCounter N8_HPS_1_300T_1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 23,
+        "x": 0,
+        "y": 4
+      },
+      "id": 76,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Comp_EM_Tag6\" or r[\"_field\"] == \"EM_Admin_Office\" or r[\"_field\"] == \"EM_Atlas_200\" or r[\"_field\"] == \"EM_CMM\" or r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\" or r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\" or r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\" or r[\"_field\"] == \"EM_Elgi6\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\" or r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_Hitachi_600T\" or r[\"_field\"] == \"EM_HMT_400T\" or r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\" or r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\" or r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\" or r[\"_field\"] == \"EM_Nut_Weld1\" or r[\"_field\"] == \"EM_Roll_Foaming\" or r[\"_field\"] == \"EM_Rovetta\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone15\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone16\" or r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\" or r[\"_field\"] == \"EM_Tag10\" or r[\"_field\"] == \"EM_Tag11\" or r[\"_field\"] == \"EM_Tag12\" or r[\"_field\"] == \"EM_Tag13\" or r[\"_field\"] == \"EM_Tag14\" or r[\"_field\"] == \"EM_Tag15\" or r[\"_field\"] == \"EM_Tag16\" or r[\"_field\"] == \"EM_Tag17\" or r[\"_field\"] == \"EM_Tag18\" or r[\"_field\"] == \"EM_Tag19\" or r[\"_field\"] == \"EM_Tag20\" or r[\"_field\"] == \"EM_Tag7\" or r[\"_field\"] == \"EM_Tag8\" or r[\"_field\"] == \"EM_Tag9\" or r[\"_field\"] == \"EM_Tool_Room\" or r[\"_field\"] == \"Fagor_EM_Tag4\" or r[\"_field\"] == \"Fagor_EM_Tag5\" or r[\"_field\"] == \"KOM_EM_Tag1\" or r[\"_field\"] == \"KOM_EM_Tag2\" or r[\"_field\"] == \"KOM_EM_Tag3\")\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Till date Consumption",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 12
+      },
+      "id": 40,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\")\n\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 12
+      },
+      "id": 44,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "limit": 1,
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\")\n\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Die_Shop1 EMSJ2",
+                "EM_Die_Shop2 EMSJ2",
+                "EM_Die_Spoting EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 12
+      },
+      "id": 49,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "limit": 1,
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\")\n\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Die_Shop2 EMSJ2",
+                "EM_Die_Spoting EMSJ2",
+                "EM_Die_Shop1 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlBl"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 12
+      },
+      "id": 47,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "limit": 1,
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\")\n\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Die_Shop1 EMSJ2",
+                "EM_Die_Shop2 EMSJ2",
+                "EM_Die_Spoting EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.007"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 16
+      },
+      "id": 25,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\")",
+          "refId": "A"
+        }
+      ],
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 16
+      },
+      "id": 50,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Isgec1_400 EMSJ2",
+                "EM_Isgec3_1200 EMSJ2",
+                "EM_Isgec4_800T EMSJ2",
+                "EM_Isgec1_630 EMSJ2",
+                "EM_Isgec2_1000 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 16
+      },
+      "id": 52,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Isgec1_400 EMSJ2",
+                "EM_Isgec3_1200 EMSJ2",
+                "EM_Isgec4_800T EMSJ2",
+                "EM_Isgec1_630 EMSJ2",
+                "EM_Isgec2_1000 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlBl"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 16
+      },
+      "id": 51,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Isgec1_400 EMSJ2",
+                "EM_Isgec3_1200 EMSJ2",
+                "EM_Isgec4_800T EMSJ2",
+                "EM_Isgec1_630 EMSJ2",
+                "EM_Isgec2_1000 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.0071"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 20
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 20
+      },
+      "id": 53,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_ELGI1 EMSJ2",
+                "EM_ELGI2 EMSJ2",
+                "EM_ELGI3 EMSJ2",
+                "EM_ELGI7 EMSJ2",
+                "EM_ELGI5 EMSJ2",
+                "EM_ELGI4 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 20
+      },
+      "id": 54,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_ELGI1 EMSJ2",
+                "EM_ELGI2 EMSJ2",
+                "EM_ELGI3 EMSJ2",
+                "EM_ELGI7 EMSJ2",
+                "EM_ELGI5 EMSJ2",
+                "EM_ELGI4 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlBl"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 20
+      },
+      "id": 55,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_ELGI1 EMSJ2",
+                "EM_ELGI2 EMSJ2",
+                "EM_ELGI3 EMSJ2",
+                "EM_ELGI7 EMSJ2",
+                "EM_ELGI5 EMSJ2",
+                "EM_ELGI4 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.007"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 24
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\")",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 24
+      },
+      "id": 59,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\")\n    |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Fagor_1200T EMSJ2",
+                "EM_Fagor_1200T_Robot EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 24
+      },
+      "id": 61,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\")\n    |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Fagor_1200T EMSJ2",
+                "EM_Fagor_1200T_Robot EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlBl"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 24
+      },
+      "id": 58,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "binary": {
+              "left": "EM_Fagor_1200T EMSJ2",
+              "reducer": "sum",
+              "right": "EM_Fagor_1200T_Robot EMSJ2"
+            },
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Fagor_1200T_Robot EMSJ2",
+                "EM_Fagor_1200T EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Unit",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.007"
+            },
+            "mode": "binary",
+            "reduce": {
+              "include": [
+                "Unit"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 28
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\")\n",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 28
+      },
+      "id": 60,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\")\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_EOT_1_2 EMSJ2",
+                "EM_EOT_3_4_5_6 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 28
+      },
+      "id": 62,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\")\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_EOT_1_2 EMSJ2",
+                "EM_EOT_3_4_5_6 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlRd"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 28
+      },
+      "id": 63,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\")\n",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_EOT_1_2 EMSJ2",
+                "EM_EOT_3_4_5_6 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.0071"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 32
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_HMT_400T\")",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 32
+      },
+      "id": 64,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_HMT_400T\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_HMT1_200T EMSJ2",
+                "EM_HMT_400T EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 32
+      },
+      "id": 65,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_HMT_400T\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_HMT1_200T EMSJ2",
+                "EM_HMT_400T EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlRd"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 32
+      },
+      "id": 66,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_HMT_400T\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_HMT1_200T EMSJ2",
+                "EM_HMT_400T EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.0071"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 36
+      },
+      "id": 41,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 36
+      },
+      "id": 67,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Komatsu_1200 EMSJ2",
+                "EM_Komatsu_2500 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 36
+      },
+      "id": 68,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Komatsu_1200 EMSJ2",
+                "EM_Komatsu_2500 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 36
+      },
+      "id": 69,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Komatsu_1200 EMSJ2",
+                "EM_Komatsu_2500 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.007"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 40
+      },
+      "id": 42,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 40
+      },
+      "id": 70,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_New_Shed_Light1 EMSJ2",
+                "EM_New_Shed_Light_2 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 40
+      },
+      "id": 71,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_New_Shed_Light1 EMSJ2",
+                "EM_New_Shed_Light_2 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 40
+      },
+      "id": 72,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\")\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_New_Shed_Light1 EMSJ2",
+                "EM_New_Shed_Light_2 EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.007"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 44
+      },
+      "id": 43,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\")\n\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 44
+      },
+      "id": 73,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\")\n  \n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Shed_Light1 EMSJ2",
+                "EM_Shed_Light2 EMSJ2",
+                "EM_Street_Light EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 44
+      },
+      "id": 74,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\")\n\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Shed_Light1 EMSJ2",
+                "EM_Shed_Light2 EMSJ2",
+                "EM_Street_Light EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Unit",
+            "binary": {
+              "left": "Total",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyINR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 18,
+        "y": 44
+      },
+      "id": 75,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 18,
+          "valueSize": 45
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\")\n  \n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "EM_Shed_Light1 EMSJ2",
+                "EM_Shed_Light2 EMSJ2",
+                "EM_Street_Light EMSJ2"
+              ],
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cost",
+            "binary": {
+              "left": "Total",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "0.007"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 23,
+        "x": 0,
+        "y": 48
+      },
+      "id": 77,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB2}"
+          },
+          "query": "from(bucket: \"EMS\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"EMSJ2\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Comp_EM_Tag6\" or r[\"_field\"] == \"EM_Admin_Office\" or r[\"_field\"] == \"EM_Atlas_200\" or r[\"_field\"] == \"EM_CMM\" or r[\"_field\"] == \"EM_Die_Shop1\" or r[\"_field\"] == \"EM_Die_Shop2\" or r[\"_field\"] == \"EM_Die_Spoting\" or r[\"_field\"] == \"EM_ELGI1\" or r[\"_field\"] == \"EM_ELGI2\" or r[\"_field\"] == \"EM_ELGI3\" or r[\"_field\"] == \"EM_ELGI4\" or r[\"_field\"] == \"EM_ELGI5\" or r[\"_field\"] == \"EM_ELGI7\" or r[\"_field\"] == \"EM_EOT_1_2\" or r[\"_field\"] == \"EM_EOT_3_4_5_6\" or r[\"_field\"] == \"EM_Elgi6\" or r[\"_field\"] == \"EM_Fagor_1200T_Robot\" or r[\"_field\"] == \"EM_Fagor_1200T\" or r[\"_field\"] == \"EM_HMT1_200T\" or r[\"_field\"] == \"EM_Hitachi_600T\" or r[\"_field\"] == \"EM_HMT_400T\" or r[\"_field\"] == \"EM_Isgec1_400\" or r[\"_field\"] == \"EM_Isgec1_630\" or r[\"_field\"] == \"EM_Isgec2_1000\" or r[\"_field\"] == \"EM_Isgec3_1200\" or r[\"_field\"] == \"EM_Isgec4_800T\" or r[\"_field\"] == \"EM_Komatsu_1200\" or r[\"_field\"] == \"EM_Komatsu_2500\" or r[\"_field\"] == \"EM_New_Shed_Light1\" or r[\"_field\"] == \"EM_New_Shed_Light_2\" or r[\"_field\"] == \"EM_Nut_Weld1\" or r[\"_field\"] == \"EM_Roll_Foaming\" or r[\"_field\"] == \"EM_Rovetta\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone15\" or r[\"_field\"] == \"EM_Scrap_Cny_Zone16\" or r[\"_field\"] == \"EM_Shed_Light1\" or r[\"_field\"] == \"EM_Shed_Light2\" or r[\"_field\"] == \"EM_Street_Light\" or r[\"_field\"] == \"EM_Tag10\" or r[\"_field\"] == \"EM_Tag11\" or r[\"_field\"] == \"EM_Tag12\" or r[\"_field\"] == \"EM_Tag13\" or r[\"_field\"] == \"EM_Tag14\" or r[\"_field\"] == \"EM_Tag15\" or r[\"_field\"] == \"EM_Tag16\" or r[\"_field\"] == \"EM_Tag17\" or r[\"_field\"] == \"EM_Tag18\" or r[\"_field\"] == \"EM_Tag19\" or r[\"_field\"] == \"EM_Tag20\" or r[\"_field\"] == \"EM_Tag7\" or r[\"_field\"] == \"EM_Tag8\" or r[\"_field\"] == \"EM_Tag9\" or r[\"_field\"] == \"EM_Tool_Room\" or r[\"_field\"] == \"Fagor_EM_Tag4\" or r[\"_field\"] == \"Fagor_EM_Tag5\" or r[\"_field\"] == \"KOM_EM_Tag1\" or r[\"_field\"] == \"KOM_EM_Tag2\" or r[\"_field\"] == \"KOM_EM_Tag3\")\n\n  |> yield(name: \"sum\")",
+          "refId": "A"
+        }
+      ],
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "Zone1"
+          ],
+          "value": [
+            "Zone1"
+          ]
+        },
+        "description": "check the filter option",
+        "hide": 0,
+        "includeAll": false,
+        "multi": true,
+        "name": "ZoneSelection",
+        "options": [
+          {
+            "selected": true,
+            "text": "Zone1",
+            "value": "Zone1"
+          },
+          {
+            "selected": false,
+            "text": "Zone2",
+            "value": "Zone2"
+          },
+          {
+            "selected": false,
+            "text": "Zone3",
+            "value": "Zone3"
+          },
+          {
+            "selected": false,
+            "text": "Zone4",
+            "value": "Zone4"
+          }
+        ],
+        "query": "Zone1,Zone2,Zone3,Zone4",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "J2_EMS_Ver_1.2",
+  "uid": "396Q_Hd4y2",
+  "version": 4,
+  "weekStart": ""
+}
